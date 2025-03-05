@@ -86,3 +86,24 @@ with open(output_file, 'w') as f:
             if file.endswith(".xlsm"):
                 f.write(os.path.join(root, file) + '\n')
 ```
+## Вариант 5 - Ansible
+
+```
+---
+- name: Find Excel files with macros
+  hosts: удалённый_сервер
+  tasks:
+    - name: Find .xlsm files
+      find:
+        paths: I:\ОИВТ\02-Документы отдела\21 - Сменные инженеры\04 - Личные папки\12 - Борисов Н.А
+        patterns: '*.xlsm'
+      register: excel_files
+
+    - name: Write file paths to text file
+      copy:
+        content: |
+          {% for file in excel_files.files %}
+          {{ file.path }}
+          {% endfor %}
+        dest: I:\ОИВТ\02-Документы отдела\21 - Сменные инженеры\04 - Личные папки\12 - Борисов Н.А\FilesList.txt
+```
